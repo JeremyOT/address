@@ -27,7 +27,7 @@ func main() {
 	}
 	flag.Parse()
 	if *tcpAddr {
-		addr, err := FindTCPAddress(*interfaceName, *v4)
+		addr, err := FindOpenTCPAddress(*interfaceName, *v4)
 		if err != nil {
 			panic(err)
 		}
@@ -35,7 +35,7 @@ func main() {
 		return
 	}
 	if *udpAddr {
-		addr, err := FindUDPAddress(*interfaceName, *v4)
+		addr, err := FindOpenUDPAddress(*interfaceName, *v4)
 		if err != nil {
 			panic(err)
 		}
@@ -43,7 +43,7 @@ func main() {
 		return
 	}
 	if *tcpPort {
-		port, err := FindTCPPort(*interfaceName, *v4)
+		port, err := FindOpenTCPPort(*interfaceName, *v4)
 		if err != nil {
 			panic(err)
 		}
@@ -51,7 +51,7 @@ func main() {
 		return
 	}
 	if *udpPort {
-		port, err := FindUDPPort(*interfaceName, *v4)
+		port, err := FindOpenUDPPort(*interfaceName, *v4)
 		if err != nil {
 			panic(err)
 		}

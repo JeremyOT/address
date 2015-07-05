@@ -117,9 +117,9 @@ func GetAddress(filterIPv4 bool) (address string, err error) {
 	return
 }
 
-// FindTCPAddress finds an available TCP address on the given interface. It does this by binding to
+// FindOpenTCPAddress finds an available TCP address on the given interface. It does this by binding to
 // <addr>:0, retrieving the resolved address, and then closing the connection.
-func FindTCPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
+func FindOpenTCPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
 	var address string
 	if name != "" {
 		if address, err = GetInterfaceAddress(name, filterIPv4); err != nil {
@@ -143,9 +143,9 @@ func FindTCPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
 	return
 }
 
-// FindUDPAddress finds an available UDP address on the given interface. It does this by binding to
+// FindOpenUDPAddress finds an available UDP address on the given interface. It does this by binding to
 // <addr>:0, retrieving the resolved address, and then closing the connection.
-func FindUDPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
+func FindOpenUDPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
 	var address string
 	if name != "" {
 		if address, err = GetInterfaceAddress(name, filterIPv4); err != nil {
@@ -169,9 +169,9 @@ func FindUDPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
 	return
 }
 
-// FindTCPPort uses FindTCPAddress to find an available TCP address and then return the port
-func FindTCPPort(name string, filterIPv4 bool) (port int, err error) {
-	if addr, err := FindTCPAddress(name, filterIPv4); err != nil {
+// FindOpenTCPPort uses FindOpenTCPAddress to find an available TCP address and then return the port
+func FindOpenTCPPort(name string, filterIPv4 bool) (port int, err error) {
+	if addr, err := FindOpenTCPAddress(name, filterIPv4); err != nil {
 		return 0, err
 	} else {
 		port = addr.(*net.TCPAddr).Port
@@ -179,9 +179,9 @@ func FindTCPPort(name string, filterIPv4 bool) (port int, err error) {
 	return
 }
 
-// FindUDPPort uses FindUDPAddress to find an available UDP address and then return the port
-func FindUDPPort(name string, filterIPv4 bool) (port int, err error) {
-	if addr, err := FindUDPAddress(name, filterIPv4); err != nil {
+// FindOpenUDPPort uses FindOpenUDPAddress to find an available UDP address and then return the port
+func FindOpenUDPPort(name string, filterIPv4 bool) (port int, err error) {
+	if addr, err := FindOpenUDPAddress(name, filterIPv4); err != nil {
 		return 0, err
 	} else {
 		port = addr.(*net.UDPAddr).Port
