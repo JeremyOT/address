@@ -116,3 +116,75 @@ func GetAddress(filterIPv4 bool) (address string, err error) {
 	address, err = GetInterfaceAddress(interfaces[0].Name, filterIPv4)
 	return
 }
+
+// FindTCPAddress finds an available TCP address on the given interface. It does this by binding to
+// <addr>:0, retrieving the resolved address, and then closing the connection.
+func FindTCPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
+	var address string
+	if name != "" {
+		if address, err = GetInterfaceAddress(name, filterIPv4); err != nil {
+			return
+		}
+	} else {
+		if address, err = GetAddress(filterIPv4); err != nil {
+			return
+		}
+	}
+	resolvedAddr, err := net.ResolveTCPAddr("tcp", net.JoinHostPort(address, "0"))
+	if err != nil {
+		return
+	}
+	if listener, err := net.ListenTCP("tcp", resolvedAddr); err != nil {
+		return nil, err
+	} else {
+		defer listener.Close()
+		addr = listener.Addr()
+	}
+	return
+}
+
+// FindUDPAddress finds an available UDP address on the given interface. It does this by binding to
+// <addr>:0, retrieving the resolved address, and then closing the connection.
+func FindUDPAddress(name string, filterIPv4 bool) (addr net.Addr, err error) {
+	var address string
+	if name != "" {
+		if address, err = GetInterfaceAddress(name, filterIPv4); err != nil {
+			return
+		}
+	} else {
+		if address, err = GetAddress(filterIPv4); err != nil {
+			return
+		}
+	}
+	resolvedAddr, err := net.ResolveUDPAddr("udp", net.JoinHostPort(address, "0"))
+	if err != nil {
+		return
+	}
+	if listener, err := net.ListenUDP("udp", resolvedAddr); err != nil {
+		return nil, err
+	} else {
+		defer listener.Close()
+		addr = listener.LocalAddr()
+	}
+	return
+}
+
+// FindTCPPort uses FindTCPAddress to find an available TCP address and then return the port
+func FindTCPPort(name string, filterIPv4 bool) (port int, err error) {
+	if addr, err := FindTCPAddress(name, filterIPv4); err != nil {
+		return 0, err
+	} else {
+		port = addr.(*net.TCPAddr).Port
+	}
+	return
+}
+
+// FindUDPPort uses FindUDPAddress to find an available UDP address and then return the port
+func FindUDPPort(name string, filterIPv4 bool) (port int, err error) {
+	if addr, err := FindUDPAddress(name, filterIPv4); err != nil {
+		return 0, err
+	} else {
+		port = addr.(*net.UDPAddr).Port
+	}
+	return
+}
